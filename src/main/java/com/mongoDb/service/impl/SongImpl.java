@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class SongImpl implements SongService {
@@ -19,30 +18,50 @@ public class SongImpl implements SongService {
 
     @Override
     public Song createSong(SongDTO songDTO) {
-        UUID uuid = UUID.randomUUID();
-        Song song = new Song(uuid,
-                songDTO.getTitle(),
-//                songDTO.getType(),
-                songDTO.getImage(),
-                songDTO.getThumbnail(),
-                songDTO.isVip());
-        return songRepository.save(song);
+        return songRepository.save(songDTO.toSong());
     }
 
     @Override
-    public Optional<Song> getSongByUUID(String uuid) {
-        return songRepository.findSongByUuid(UUID.fromString(uuid));
+    public List<Song> createListSong(List<SongDTO> songDTOS) {
+        List<Song> songs = songDTOS
+                .stream()
+                .map(SongDTO::toSong).toList();
+
+        return songRepository.saveAll(songs);
     }
 
     @Override
-    public void deleteSong(String uuid) {
-        songRepository.deleteById(uuid);
+    public Song updateSong(SongDTO songDTO, String id) {
+        Song updateSong;
+        Optional<Song> song = getSongById(id);
+        if (song.isPresent()) {
+            updateSong = song.get();
+            updateSong.setTitle(songDTO.getTitle());
+            updateSong.setImage(songDTO.getImage());
+            updateSong.setThumbnail(songDTO.getThumbnail());
+            updateSong.setVip(songDTO.isVip());
+            return songRepository.save(updateSong);
+        }
+        return null;
     }
 
     @Override
-    public List<Song> getAllSong() {
+    public Optional<Song> getSongById(String id) {
+        return songRepository.findSongById(id);
+    }
+
+    @Override
+    public void deleteSong(String id) {
+        songRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Song> findSongsByTitle(String title) {
+        return songRepository.findSongsByTitleContaining(title);
+    }
+
+    @Override
+    public List<Song> findAll() {
         return songRepository.findAll();
     }
-
-
 }
