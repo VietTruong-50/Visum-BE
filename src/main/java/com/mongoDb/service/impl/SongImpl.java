@@ -1,10 +1,15 @@
 package com.mongoDb.service.impl;
 
 import com.mongoDb.entity.SongDTO;
+import com.mongoDb.enums.GenreEnum;
 import com.mongoDb.model.Song;
 import com.mongoDb.repository.SongRepository;
 import com.mongoDb.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,13 +39,10 @@ public class SongImpl implements SongService {
     public Song updateSong(SongDTO songDTO, String id) {
         Song updateSong;
         Optional<Song> song = getSongById(id);
+
         if (song.isPresent()) {
             updateSong = song.get();
-            updateSong.setTitle(songDTO.getTitle());
-            updateSong.setImage(songDTO.getImage());
-            updateSong.setThumbnail(songDTO.getThumbnail());
-            updateSong.setVip(songDTO.isVip());
-            return songRepository.save(updateSong);
+            return songRepository.save(songDTO.toUpdateSong(updateSong));
         }
         return null;
     }
@@ -61,7 +63,25 @@ public class SongImpl implements SongService {
     }
 
     @Override
+    public Page<Song> findSongsByGenre(GenreEnum genre, int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return songRepository.findSongsByGenre(genre, pageable);
+    }
+
+    @Override
     public List<Song> findAll() {
         return songRepository.findAll();
     }
+
+//    @Autowired
+//    private MongoTemplate mongoTemplate;
+//
+//
+//    public List<Song> findSongBySearchText(String text){
+//        TextCriteria textCriteria = TextCriteria.forDefaultLanguage().matching(text);
+//
+//        Query query = TextQuery.queryText(textCriteria).sortByScore();
+//
+//        return mongoTemplate.find(query, Song.class);
+//    }
 }

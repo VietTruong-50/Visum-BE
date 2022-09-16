@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,7 +19,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final String[] publicEndpoints = {"/auth/sign-up", "/auth/login"};
+    private final String[] publicEndpoints = {
+            "/auth/**",
+            "/v2/api-docs",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/webjars/**"
+    };
 
     @Autowired
     private UserImpl userService;
@@ -45,7 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         http.csrf().disable().authorizeRequests().antMatchers(publicEndpoints)
-                .permitAll().anyRequest().authenticated();
+                .permitAll().anyRequest().authenticated().and().logout().permitAll().and().cors();
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }

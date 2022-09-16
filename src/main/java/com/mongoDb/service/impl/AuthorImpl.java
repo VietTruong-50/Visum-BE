@@ -64,7 +64,6 @@ public class AuthorImpl implements AuthorService {
 
             return authorRepository.save(authorToUpdate);
         }
-
         return null;
     }
 

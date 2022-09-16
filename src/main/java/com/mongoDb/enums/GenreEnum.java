@@ -1,5 +1,5 @@
 package com.mongoDb.enums;
 
-public enum TypeEnum {
+public enum GenreEnum {
     US_UK, BOLERO
 }
