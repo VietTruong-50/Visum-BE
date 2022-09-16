@@ -1,13 +1,12 @@
 package com.mongoDb.controller;
 
 import com.mongoDb.entity.AuthorDTO;
-import com.mongoDb.entity.SongDTO;
 import com.mongoDb.model.Author;
 import com.mongoDb.response.ApiResponse;
+import com.mongoDb.service.AuthorService;
 import com.mongoDb.service.impl.AuthorImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +18,21 @@ public class AuthorController {
 
     @Autowired
     private AuthorImpl authorImpl;
+
+    @Autowired
+    private final AuthorService authorService;
+
+    @PostMapping(value = "/insertAuthor", produces = "application/json")
+    public ApiResponse<Author> createAuthor(@RequestBody AuthorDTO authorDTO){
+        Author author = authorService.createAuthor(authorDTO);
+        return ApiResponse.successWithResult(author);
+    }
+
+    @GetMapping(value = "/authors", produces = "application/json")
+    public ApiResponse<List<Author>> getAuthors() {
+        List<Author> authorList = authorImpl.findAll();
+        return ApiResponse.successWithResult(authorList);
+    }
 
     @PutMapping(value = "/authors/{authorId}", produces = "application/json")
     public ApiResponse<Author> updateAuthor(@PathVariable("authorId") String id, @RequestBody AuthorDTO authorDTO){

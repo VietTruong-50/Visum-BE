@@ -1,19 +1,23 @@
 package com.mongoDb.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-import java.util.UUID;
-
 @Data
 @Document(collection = "artist")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Artist {
     @Id
-    private UUID uuid;
-    private String name;
-    private String nickName;
-    private List<Song> musicList;
-    private List<Album> albumList;
+    private String artistId;
+
+    private String artistName;
+
+    private String description;
+
+//    private List<Album> albumList;
+
 }
