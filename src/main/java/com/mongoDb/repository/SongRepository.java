@@ -13,6 +13,6 @@ import java.util.Optional;
 @Repository
 public interface SongRepository extends MongoRepository<Song, String>{
     Optional<Song> findSongById(String uuid);
-    List<Song> findSongsByTitleContaining(String title);
-    Page<Song> findSongsByGenre(GenreEnum genreName, Pageable pageable);
+    Page<Song> findSongsByTitleContaining(String title, Pageable pageable);
+    Page<Song> findSongsByGenreCategoryContaining(List<String> genre_category, Pageable pageable);
 }

@@ -1,7 +1,6 @@
 package com.mongoDb.controller;
 
-import com.mongoDb.entity.SongDTO;
-import com.mongoDb.enums.GenreEnum;
+import com.mongoDb.request.SongDTO;
 import com.mongoDb.exception.NotFoundException;
 import com.mongoDb.model.Song;
 import com.mongoDb.response.ApiResponse;
@@ -12,12 +11,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 
 
 @RestController
-@RequestMapping("api/v1/visum")
+@RequestMapping("/visum")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class SongController {
 
     @Autowired
@@ -30,7 +31,7 @@ public class SongController {
     }
 
     @PostMapping(value = "/insertListSong", produces = "application/json")
-    public ApiResponse<List<Song>> createSong(@RequestBody @Valid List<SongDTO> songDTO) {
+    public ApiResponse<List<Song>> createListSong(@RequestBody @Valid List<SongDTO> songDTO) {
         List<Song> songs = songImpl.createListSong(songDTO);
         return ApiResponse.successWithResult(songs);
     }
@@ -48,17 +49,20 @@ public class SongController {
 //    }
 
     @GetMapping(value = "/search", produces = "application/json")
-    public ApiResponse<List<Song>> findSongsByTitle(@RequestParam String title) throws NotFoundException {
-        List<Song> songList = songImpl.findSongsByTitle(title);
-        return ApiResponse.successWithResult(songList);
-    }
-
-    @GetMapping(value = "/songs/{genre}", produces = "application/json")
-    public ApiResponse<Page<Song>> findSongsByGenre(@PathVariable("genre") GenreEnum genre,
+    public ApiResponse<Page<Song>> findSongsByTitle(@RequestParam String title,
                                                     @RequestParam int page,
                                                     @RequestParam int size,
                                                     @RequestParam String sortBy) throws NotFoundException {
-        Page<Song> songList = songImpl.findSongsByGenre(genre, page - 1, size, sortBy);
+        Page<Song> songList = songImpl.findSongsByTitle(title, page, size, sortBy);
+        return ApiResponse.successWithResult(songList);
+    }
+
+    @GetMapping(value = "/songs/{category}", produces = "application/json")
+    public ApiResponse<Page<Song>> findSongsByCategory(@PathVariable("category") String category,
+                                                    @RequestParam int page,
+                                                    @RequestParam int size,
+                                                    @RequestParam String sortBy) throws NotFoundException {
+        Page<Song> songList = songImpl.findSongsByCategory(Collections.singletonList(category), page - 1, size, sortBy);
         return ApiResponse.successWithResult(songList);
     }
 
@@ -71,7 +75,7 @@ public class SongController {
     @DeleteMapping(value = "/songs/{songId}", produces = "application/json")
     public ApiResponse<Song> deleteSong(@PathVariable("songId") String id) {
         songImpl.deleteSong(id);
-        return ApiResponse.successWithResult(null, "");
+        return ApiResponse.successWithResult(null, "Delete success");
     }
 
 

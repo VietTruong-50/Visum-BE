@@ -1,6 +1,6 @@
 package com.mongoDb.controller;
 
-import com.mongoDb.entity.AlbumDTO;
+import com.mongoDb.request.AlbumDTO;
 import com.mongoDb.model.Album;
 import com.mongoDb.response.ApiResponse;
 import com.mongoDb.service.impl.AlbumImpl;

@@ -1,6 +1,6 @@
-package com.mongoDb.entity;
+package com.mongoDb.request;
 
-import com.mongoDb.enums.GenreEnum;
+import com.mongoDb.model.Genre;
 import com.mongoDb.model.Song;
 import lombok.Data;
 
@@ -19,7 +19,10 @@ public class SongDTO {
     @NotBlank
     private String thumbnail;
 
-    private GenreEnum genre;
+    private Genre genre;
+
+    @NotNull
+    private double duration;
 
     @NotNull
     private boolean vip;
@@ -31,6 +34,7 @@ public class SongDTO {
         song.setTitle(title);
         song.setImage(image);
         song.setThumbnail(thumbnail);
+        song.setDuration(duration);
         song.setGenre(genre);
         song.setVip(vip);
         return song;
@@ -40,11 +44,9 @@ public class SongDTO {
         song.setTitle(title);
         song.setImage(image);
         song.setThumbnail(thumbnail);
+        song.setDuration(duration);
         song.setGenre(genre);
         song.setVip(vip);
         return song;
     }
-
-//    @NotEmpty
-//    private List<Artist> artistList;
 }

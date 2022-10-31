@@ -1,9 +1,9 @@
 package com.mongoDb.controller;
 
-import com.mongoDb.entity.CustomUserDetail;
-import com.mongoDb.entity.LoginRequestDTO;
-import com.mongoDb.entity.LoginResponseDTO;
-import com.mongoDb.entity.UserDTO;
+import com.mongoDb.request.CustomUserDetail;
+import com.mongoDb.request.LoginRequestDTO;
+import com.mongoDb.request.LoginResponseDTO;
+import com.mongoDb.request.UserDTO;
 import com.mongoDb.jwt.JwtTokenProvider;
 import com.mongoDb.model.User;
 import com.mongoDb.response.ApiResponse;
@@ -12,13 +12,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class AuthController {
 
     @Autowired
@@ -36,7 +34,7 @@ public class AuthController {
         try {
             user = userService.createUser(registerRequest);
         } catch (Exception e) {
-            return ApiResponse.failureWithCode(null, null, user);
+            return ApiResponse.failureWithCode("400" , e.getMessage(), user);
         }
         return ApiResponse.successWithResult(user);
     }

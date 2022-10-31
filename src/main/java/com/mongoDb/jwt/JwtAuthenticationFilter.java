@@ -1,8 +1,7 @@
 package com.mongoDb.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongoDb.entity.CustomUserDetail;
-import com.mongoDb.jwt.JwtTokenProvider;
+import com.mongoDb.request.CustomUserDetail;
 import com.mongoDb.service.impl.UserImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

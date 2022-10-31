@@ -1,19 +1,16 @@
 package com.mongoDb.service.impl;
 
-import com.mongoDb.entity.SongDTO;
-import com.mongoDb.enums.GenreEnum;
+import com.mongoDb.request.SongDTO;
 import com.mongoDb.model.Song;
+import com.mongoDb.repository.ArtistRepository;
+import com.mongoDb.repository.GenreRepository;
 import com.mongoDb.repository.SongRepository;
 import com.mongoDb.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class SongImpl implements SongService {
@@ -21,8 +18,15 @@ public class SongImpl implements SongService {
     @Autowired
     private SongRepository songRepository;
 
+    @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private GenreRepository genreRepository;
+
     @Override
     public Song createSong(SongDTO songDTO) {
+//        songDTO.setArtist(artistRepository.findById(songDTO.getArtist().getId()).orElse(null));
         return songRepository.save(songDTO.toSong());
     }
 
@@ -37,13 +41,13 @@ public class SongImpl implements SongService {
 
     @Override
     public Song updateSong(SongDTO songDTO, String id) {
-        Song updateSong;
+//        Song updateSong;
         Optional<Song> song = getSongById(id);
-
-        if (song.isPresent()) {
-            updateSong = song.get();
-            return songRepository.save(songDTO.toUpdateSong(updateSong));
-        }
+        song.ifPresent(value -> songRepository.save(songDTO.toUpdateSong(value)));
+//        if (song.isPresent()) {
+//            updateSong = song.get();
+//            return songRepository.save(songDTO.toUpdateSong(updateSong));
+//        }
         return null;
     }
 
@@ -58,15 +62,17 @@ public class SongImpl implements SongService {
     }
 
     @Override
-    public List<Song> findSongsByTitle(String title) {
-        return songRepository.findSongsByTitleContaining(title);
+    public Page<Song> findSongsByTitle(String title, int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return songRepository.findSongsByTitleContaining(title, pageable);
     }
 
     @Override
-    public Page<Song> findSongsByGenre(GenreEnum genre, int page, int size, String sortBy) {
+    public Page<Song> findSongsByCategory(List<String> category, int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return songRepository.findSongsByGenre(genre, pageable);
+        return songRepository.findSongsByGenreCategoryContaining(category,  pageable);
     }
+
 
     @Override
     public List<Song> findAll() {

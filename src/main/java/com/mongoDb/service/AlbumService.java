@@ -1,6 +1,6 @@
 package com.mongoDb.service;
 
-import com.mongoDb.entity.AlbumDTO;
+import com.mongoDb.request.AlbumDTO;
 import com.mongoDb.model.Album;
 
 import java.util.List;

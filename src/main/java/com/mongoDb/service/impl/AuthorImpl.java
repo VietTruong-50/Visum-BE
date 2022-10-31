@@ -1,6 +1,7 @@
 package com.mongoDb.service.impl;
 
-import com.mongoDb.entity.AuthorDTO;
+import com.mongoDb.entities.SongAuthor;
+import com.mongoDb.request.AuthorDTO;
 import com.mongoDb.model.Author;
 import com.mongoDb.model.Song;
 import com.mongoDb.repository.AuthorRepository;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,21 +50,38 @@ public class AuthorImpl implements AuthorService {
     @Override
     public Author addSongToAuthor(String id, List<String> songsId) {
         Optional<Author> author = authorRepository.findById(id);
-        if(author.isPresent()){
+        if (author.isPresent()) {
             Author authorToUpdate = author.get();
+            Set<Song> songsToAdd = authorToUpdate.getSongs();
 
-            Set<Song> songsToAdd = songsId
+            songsToAdd.addAll(songsId
                     .stream()
-                    .map(songId -> songRepository.findSongById(songId))
+                    .map(songId -> {
+                        SongAuthor songAuthor = new SongAuthor();
+                        songAuthor.setId(authorToUpdate.getId());
+                        songAuthor.setName(authorToUpdate.getName());
+                        Optional<Song> song = songRepository.findSongById(songId);
+                        if (song.isPresent()) {
+                            Song updSong = song.get();
+                            updSong.setSongAuthor(songAuthor);
+                            songRepository.save(updSong);
+                        }
+                        return song;
+                    })
                     .filter(Optional::isPresent)
                     .map(Optional::get)
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toSet()));
 
             authorToUpdate.setSongs(songsToAdd);
 
             return authorRepository.save(authorToUpdate);
         }
         return null;
+    }
+
+    @Override
+    public Author findById(String id) {
+        return authorRepository.findById(id).orElse(null);
     }
 
 }

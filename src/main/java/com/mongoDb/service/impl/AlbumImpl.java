@@ -1,6 +1,6 @@
 package com.mongoDb.service.impl;
 
-import com.mongoDb.entity.AlbumDTO;
+import com.mongoDb.request.AlbumDTO;
 import com.mongoDb.model.Album;
 import com.mongoDb.model.Song;
 import com.mongoDb.repository.AlbumRepository;

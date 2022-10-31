@@ -1,4 +1,4 @@
-package com.mongoDb.entity;
+package com.mongoDb.request;
 
 import com.mongoDb.model.Author;
 import com.mongoDb.model.Song;
@@ -23,7 +23,6 @@ public class AuthorDTO {
         String authorId = UUID.randomUUID().toString();
         author.setId(authorId);
         author.setName(name);
-        author.setSongs(songList);
         return author;
     }
 }

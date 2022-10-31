@@ -1,4 +1,4 @@
-package com.mongoDb.entity;
+package com.mongoDb.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

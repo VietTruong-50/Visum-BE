@@ -1,7 +1,6 @@
 package com.mongoDb.service;
 
-import com.mongoDb.entity.SongDTO;
-import com.mongoDb.enums.GenreEnum;
+import com.mongoDb.request.SongDTO;
 import com.mongoDb.model.Song;
 import org.springframework.data.domain.Page;
 
@@ -16,6 +15,7 @@ public interface SongService {
     Song updateSong(SongDTO songDTO, String id);
     Optional<Song> getSongById(String uuid);
     void deleteSong(String uuid);
-    List<Song> findSongsByTitle(String title);
-    Page<Song> findSongsByGenre(GenreEnum genre, int page, int size, String sortBy);
+    Page<Song> findSongsByTitle(String title, int page, int size, String sortBy);
+    Page<Song> findSongsByCategory(List<String> category, int page, int size, String sortBy);
+
 }

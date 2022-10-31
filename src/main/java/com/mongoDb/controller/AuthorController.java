@@ -1,6 +1,6 @@
 package com.mongoDb.controller;
 
-import com.mongoDb.entity.AuthorDTO;
+import com.mongoDb.request.AuthorDTO;
 import com.mongoDb.model.Author;
 import com.mongoDb.response.ApiResponse;
 import com.mongoDb.service.AuthorService;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/visum")
+@RequestMapping("/visum")
 @AllArgsConstructor
 public class AuthorController {
 
@@ -46,4 +46,9 @@ public class AuthorController {
         return ApiResponse.successWithResult(author);
     }
 
+    @GetMapping(value = "/author/{authorId}", produces = "application/json")
+    public ApiResponse<Author> findAuthorById(@PathVariable("authorId") String id){
+        Author author = authorImpl.findById(id);
+        return ApiResponse.successWithResult(author);
+    }
 }

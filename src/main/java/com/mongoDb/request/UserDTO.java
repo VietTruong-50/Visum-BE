@@ -1,13 +1,16 @@
-package com.mongoDb.entity;
+package com.mongoDb.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mongoDb.enums.GenderEnum;
 import com.mongoDb.model.Song;
 import com.mongoDb.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.validation.constraints.Pattern;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,8 +30,10 @@ public class UserDTO {
 
     private String lastName;
 
+    @Pattern(regexp = "^0\\d{9}$", message = "Số điện thoại không hợp lệ")
     private String mobile;
 
+    @Indexed(unique = true)
     private String email;
 
     private Set<Song> favoriteSongs;
@@ -47,4 +52,5 @@ public class UserDTO {
         user.setFavoriteSongs(favoriteSongs);
         return user;
     }
+
 }
